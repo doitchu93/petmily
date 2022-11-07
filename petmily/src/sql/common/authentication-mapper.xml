@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="insertAuthentication">
+		INSERT 
+		  INTO 
+		       AUTHENTICATION 
+		       (
+		       AUTHENTICATION_NO, 
+		       EMAIL, 
+		       RANDOM_CODE
+		       )
+		VALUES 
+		       (
+		       SEQ_ACNO.NEXTVAL, 
+		       ?, 
+		       ?
+		       )
+	</entry>
+	
+	<entry key="checkRandomCode">
+		SELECT 
+		       RANDOM_CODE, 
+		       ENROLL_DATE
+          FROM 
+               AUTHENTICATION
+         WHERE 
+               EMAIL = ?
+         ORDER 
+            BY 
+               ENROLL_DATE
+               DESC
+	</entry>
+	
+</properties>

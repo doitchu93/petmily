@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<comment>1:1문의 관련</comment>
+	
+	<entry key="insertAsk">
+		INSERT INTO ASK(ASK_NO, TYPE, USER_NO, ASK_CATEGORY, ASK_TITLE, ASK_CONTENT, ASK_WRITER, CREATE_DATE)
+		VALUES(SEQ_ASKNO.NEXTVAL, 'AS', ?, ?, ?, ?, ?, SYSDATE)
+	</entry>
+	
+	<entry key="selectAskList">
+		SELECT ASK_NO, CATEGORY_NAME, ASK_TITLE, CREATE_DATE, REPLY_STATUS, USER_NAME
+  		  FROM ASK A, CATEGORY_ASK, MEMBER M
+ 		 WHERE ASK_CATEGORY = CATEGORY_NO
+  		   AND A.USER_NO = M.USER_NO
+		 ORDER BY ASK_NO DESC
+	</entry>
+	
+	<entry key="selectAsk">
+		SELECT ASK_NO, CATEGORY_NAME, ASK_TITLE, ASK_WRITER, ASK_CONTENT
+  		  FROM ASK
+  		  JOIN CATEGORY_ASK ON(ASK_CATEGORY = CATEGORY_NO)
+ 		 WHERE ASK_NO = ?
+	</entry>
+	
+	<entry key="selectCategoryList">
+		SELECT CATEGORY_NO, CATEGORY_NAME
+  		  FROM CATEGORY_ASK
+	</entry>
+	
+	<entry key="updateAsk">
+		UPDATE ASK 
+		   SET ASK_CATEGORY = ?, ASK_TITLE = ?, ASK_CONTENT = ? 
+		 WHERE ASK_NO = ?
+	</entry>
+	
+	<entry key="insertAttachmentList">
+		INSERT INTO ATTACHMENT(FILE_NO, REF_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH, TYPE)
+		VALUES (SEQ_ATNO.NEXTVAL, SEQ_ASKNO.CURRVAL, ?, ?, ?, 'AS')
+	</entry>
+
+	<entry key="selectAttachment">
+		SELECT FILE_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH
+  		  FROM ATTACHMENT
+ 		 WHERE REF_NO = ?
+	</entry>
+	
+	<entry key="increaseCount">
+		UPDATE ASK
+		   SET COUNT = COUNT + 1
+		 WHERE ASK_NO = ?
+	</entry>
+	
+	<entry key="updateAttachment">
+		UPDATE ATTACHMENT
+   		   SET ORIGIN_NAME = ?,
+       		   CHANGE_NAME = ?,
+       		   FILE_PATH = ?,
+       		   UPLOAD_DATE = SYSDATE
+ 		 WHERE FILE_NO = ?
+   		   AND STATUS = 'Y'
+	</entry>
+	
+	<entry key="insertNewAttachment">
+		INSERT INTO ATTACHMENT (FILE_NO, REF_NO, ORIGIN_NAME, CHANGE_NAME, FILE_PATH)
+		VALUES(SEQ_ATNO.NEXTVAL, ?, ?, ?, ?)
+	</entry>
+	
+	<entry key="insertReply">
+		INSERT INTO REPLY(REPLY_NO, REF_REPNO, REPLY_CONTENT, CREATE_DATE, REPLY_STATUS)
+		VALUES (SEQ_REPLYNO.NEXTVAL, ?, ?, SYSDATE, 'Y')
+	</entry>
+	
+	<entry key="selectReply">
+		SELECT REPLY_CONTENT, REF_REPNO
+  		  FROM REPLY
+  		 WHERE REF_REPNO = ?
+	</entry>
+	
+	<entry key="updateReply">
+		UPDATE REPLY SET REPLY_CONTENT = ? WHERE REF_REPNO = ?
+	</entry>
+	
+	<entry key="selectListCount">
+		SELECT COUNT(*) COUNT
+          FROM ASK
+         WHERE STATUS='Y'
+	</entry>
+	
+	<entry key="selectList">
+		SELECT *
+  		  FROM (SELECT ROWNUM RNUM, A.*
+          		  FROM (SELECT ASK_NO, CATEGORY_NAME, ASK_TITLE, USER_NAME, A.CREATE_DATE, ASK_REPLY
+						  FROM ASK A, CATEGORY_ASK, MEMBER M
+						 WHERE ASK_CATEGORY = CATEGORY_NO
+						   AND A.USER_NO = M.USER_NO
+						 ORDER BY ASK_NO DESC) A)
+ 		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectUserIdList">
+		SELECT *
+  		  FROM (SELECT ROWNUM RNUM, A.*
+          		  FROM (SELECT ASK_NO, CATEGORY_NAME, ASK_TITLE, USER_NAME, A.CREATE_DATE, R.REPLY_STATUS
+                   		  FROM ASK A, MEMBER M, CATEGORY_ASK C, REPLY R
+                		 WHERE ASK_CATEGORY = CATEGORY_NO
+                   		   AND A.USER_NO = M.USER_NO
+                   		   AND A.STATUS = 'Y'
+                   		   AND USER_ID = ?
+                   		   AND A.ASK_NO = R.REF_REPNO
+                 		 ORDER BY CREATE_DATE DESC) A)
+ 		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="selectReplyList">
+		SELECT REF_REPNO, REPLY_STATUS
+		  FROM REPLY
+		 ORDER BY REF_REPNO DESC
+	</entry>
+	
+	<entry key="updateAskReply">
+		UPDATE ASK SET ASK_REPLY = 'Y' WHERE ASK_NO = ?
+	</entry>
+	
+	<entry key="selectUserIdListCount">
+		SELECT COUNT(*) COUNT
+          FROM ASK A
+         WHERE STATUS='Y'
+           AND USER_NO = ?
+	</entry>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</properties>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<comment>입양후기/봉사후기/봉사모집 </comment>
+	
+	<entry key="insertCommunity">
+		INSERT
+		  INTO 
+			  COMMUNITY (
+						  COM_NO,
+						  USER_NO,
+						  CREATE_DATE,
+						  COM_TITLE,
+						  COM_SUMMARY,
+						  COM_CONTENT,
+						  COM_TYPE
+			   			  )
+		VALUES
+			  (SEQ_COMNO.NEXTVAL, ?, SYSDATE, ?, ?, ?, ?)
+
+	</entry>
+
+	<entry key="insertAttachmentList">
+		INSERT INTO
+		            ATTACHMENT(
+		                       FILE_NO,
+		                       REF_NO,
+		                       ORIGIN_NAME,
+		                       CHANGE_NAME,
+		                       FILE_PATH,
+		                       FILE_LEVEL,
+		                       TYPE
+		                       )
+	    VALUES
+	    	   (SEQ_ATNO.NEXTVAL, SEQ_COMNO.CURRVAL, ?, ?, ?, ?, ?)	
+	</entry>
+	
+	<entry key="selectListCount">
+		
+		SELECT 
+			   COUNT(*) COUNT
+		  FROM
+		 	   COMMUNITY
+		 WHERE
+		 	   COM_TYPE = ? AND STATUS = 'Y'  
+
+	</entry>
+
+	<entry key="selectList">
+		SELECT*
+		FROM(
+			 SELECT
+					ROWNUM RNUM, A.*
+			   FROM
+			        (SELECT COM_NO, USER_NICKNAME, LIKE_COUNT, COUNT, CREATE_DATE, COM_TITLE, COM_SUMMARY, 
+			        COM_TYPE, FILE_PATH||CHANGE_NAME TITLEIMG
+			        FROM COMMUNITY C
+			        JOIN MEMBER USING(USER_NO)
+			        JOIN ATTACHMENT AT ON(COM_NO = REF_NO)
+			        WHERE FILE_LEVEL = 1 AND COM_TYPE = ? AND C.STATUS='Y' AND AT.TYPE=?
+			        ORDER BY COM_NO DESC)A)
+		   WHERE  
+		        RNUM BETWEEN ? AND ?
+	
+	</entry>
+	
+	<entry key="increaseCount">
+		UPDATE COMMUNITY
+		   SET COUNT = COUNT + 1
+		 WHERE COM_NO = ?
+		   AND STATUS = 'Y'   
+	</entry>
+	
+	<entry key="selectCommunity">
+	     SELECT 
+	     	   COM_NO, USER_NICKNAME, LIKE_COUNT, COUNT, CREATE_DATE, COM_TITLE, COM_SUMMARY, COM_CONTENT, COM_TYPE
+	       FROM
+	       	    COMMUNITY C
+	       JOIN 
+	       	    MEMBER USING(USER_NO)
+	       WHERE
+	       		COM_TYPE = ? AND C.STATUS='Y' AND COM_NO = ?
+	</entry>
+	
+	<entry key="selectAttachment">
+	    SELECT 
+			   FILE_NO, 
+			   ORIGIN_NAME, 
+			   CHANGE_NAME, 
+			   FILE_PATH
+		  FROM
+		  	   ATTACHMENT A
+	      JOIN
+	      	   COMMUNITY ON(COM_NO = REF_NO)
+	     WHERE
+	     	   REF_NO = ? AND TYPE = ? AND A.STATUS = 'Y'
+	</entry>
+	
+	<entry key="updateLike">
+		UPDATE COMMUNITY
+	       SET LIKE_COUNT = LIKE_COUNT + 1, COUNT = COUNT-1
+	     WHERE COM_NO = ?
+	       AND STATUS = 'Y'   
+	</entry>
+	
+	<entry key="updateCommunity">
+	    UPDATE 
+	    	   COMMUNITY
+	       SET
+			   COM_TITLE = ?,
+			   COM_SUMMARY = ?,
+			   COM_CONTENT = ?
+	     WHERE
+	            COM_NO = ? AND STATUS = 'Y'
+	</entry>
+	
+	
+	<entry key="removeAttachmentList">
+		DELETE FROM ATTACHMENT
+		WHERE REF_NO=? AND TYPE = ?
+	</entry>
+	
+	
+	<entry key="insertNewAttachmentList">
+		INSERT INTO
+		            ATTACHMENT(
+		                       FILE_NO,
+		                       REF_NO,
+		                       ORIGIN_NAME,
+		                       CHANGE_NAME,
+		                       FILE_PATH,
+		                       FILE_LEVEL,
+		                       TYPE
+		                       )
+	    VALUES
+	    	   (SEQ_ATNO.NEXTVAL, ?, ?, ?, ?, ?, ?)	
+	</entry>
+	
+	
+	<entry key="deleteAttachmentList">
+	 	UPDATE
+	 		   ATTACHMENT
+	 	   SET
+	 	   	   STATUS = 'N'
+	 	 WHERE
+	 	 		REF_NO = ? AND TYPE = ? AND STATUS = 'Y'	      
+	</entry>
+	
+	<entry key="deleteCommunity">
+		UPDATE
+			  COMMUNITY
+		  SET
+		  	  STATUS = 'N'
+		WHERE
+			  COM_NO = ? AND STATUS = 'Y' 	  	  
+	
+	</entry>
+	
+	
+	
+	
+	
+</properties>

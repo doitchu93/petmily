@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<entry key="selectAdoptionReview">
+		SELECT
+			   ROWNUM RNUM, A.*
+		  FROM
+			   (
+			   SELECT 
+			          COM_NO, USER_NICKNAME, LIKE_COUNT, COUNT, CREATE_DATE, COM_TITLE, COM_SUMMARY, COM_TYPE, FILE_PATH||CHANGE_NAME TITLEIMG
+			     FROM 
+			          COMMUNITY C
+			     JOIN 
+			          MEMBER USING(USER_NO)
+			     JOIN 
+			          ATTACHMENT AT ON(COM_NO = REF_NO)
+			    WHERE 
+			          FILE_LEVEL = 1 
+			      AND 
+			          COM_TYPE = 1 
+			      AND 
+			          C.STATUS = 'Y' 
+			      AND 
+			          AT.TYPE = 'CM'
+			    ORDER BY 
+			          COM_NO DESC
+			    )
+			    A
+
+	     WHERE 
+	           ROWNUM <![CDATA[ < ]]> 9
+	</entry>
+	
+	<entry key="selectVolunteerReview">
+		SELECT
+			   ROWNUM RNUM, A.*
+		  FROM
+			   (
+			   SELECT 
+			          COM_NO, USER_NICKNAME, LIKE_COUNT, COUNT, CREATE_DATE, COM_TITLE, COM_SUMMARY, COM_TYPE, FILE_PATH||CHANGE_NAME TITLEIMG
+			     FROM 
+			          COMMUNITY C
+			     JOIN 
+			          MEMBER USING(USER_NO)
+			     JOIN 
+			          ATTACHMENT AT ON(COM_NO = REF_NO)
+			    WHERE 
+			          FILE_LEVEL = 1 
+			      AND 
+			          COM_TYPE = 2 
+			      AND 
+			          C.STATUS = 'Y' 
+			      AND 
+			          AT.TYPE = 'CM'
+			    ORDER BY 
+			          COM_NO DESC
+			    )
+			    A
+
+	     WHERE 
+	           ROWNUM <![CDATA[ < ]]> 5
+	</entry>
+	
+	<entry key="selectNotice">
+		SELECT
+			   ROWNUM RNUM, A.*
+		  FROM
+			   (
+			   SELECT 
+			          NOTICE_NO, NOTICE_TITLE, CREATE_DATE 
+			     FROM 
+			          NOTICE
+			    WHERE 
+			          STATUS = 'Y' 
+			    ORDER BY 
+			          NOTICE_NO DESC
+			    )
+			    A
+
+	     WHERE 
+	           ROWNUM <![CDATA[ < ]]> 7
+	</entry>
+	
+</properties>

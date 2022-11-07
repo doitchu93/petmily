@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+
+	<comment>단체신청관련</comment>
+	
+	<entry key="insertGroup">
+		INSERT INTO 
+		GROUPS (
+				GROUP_NO, USER_NO, GROUP_WRITER,
+				GROUP_NAME, USER_PHONE, GROUP_ENROLL_NO, 
+				GROUP_URL, GROUP_ETC, CREATE_DATE)
+		VALUES (SEQ_GNO.NEXTVAL, ?, ?, 
+				?, ?, ?, 
+				?, ?, SYSDATE)
+	</entry>
+	
+	<entry key="selectGroup">
+		SELECT GROUP_NO, GROUP_NAME, M.USER_NAME, G.USER_NO, USER_PHONE, GROUP_ENROLL_NO, GROUP_URL, GROUP_ETC, GROUP_AUTH
+ 		  FROM GROUPS G, MEMBER M
+ 		 WHERE G.USER_NO = M.USER_NO
+   		   AND GROUP_NO = ?
+	</entry>
+
+	<entry key="selectGroupList">
+		SELECT *
+		  FROM (SELECT ROWNUM RNUM, A.*
+		          FROM (SELECT GROUP_NO, CREATE_DATE, GROUP_NAME, USER_NAME, GROUP_AUTH
+		                  FROM GROUPS G 
+		                  INNER JOIN MEMBER M ON(G.USER_NO = M.USER_NO)
+		 		 ORDER BY GROUP_NO DESC) A)
+		 WHERE RNUM BETWEEN ? AND ?
+	</entry>
+	
+	<entry key="updateAuthAllow">
+		UPDATE GROUPS SET GROUP_AUTH = 'Y' WHERE GROUP_NO = ? 
+	</entry>
+	
+	<entry key="updateAuthReject">
+		UPDATE GROUPS SET GROUP_AUTH = 'N' WHERE GROUP_NO = ? 
+	</entry>
+	
+	<entry key="selectListCount">
+		SELECT COUNT(*) COUNT
+          FROM GROUPS
+	</entry>
+	
+	<entry key="updateAuthGroup">
+		UPDATE MEMBER SET CLASS = 'G'  WHERE USER_NO = ?  
+	</entry>
+</properties>
