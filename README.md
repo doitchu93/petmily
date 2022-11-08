@@ -112,7 +112,7 @@
 
 <p align="center"><img src="https://user-images.githubusercontent.com/102894238/200467662-d0426234-9900-4943-be41-93b8151a142b.png" width=40%/></p>
 
-- 이메일을 발송하면 인증 테이블에 인증코드가 저장되며, 해당 시간으로부터 10분이 지나면 발송했던 인증코드로는 인증이 불가능합니다.
+- 이메일을 발송하면 인증 테이블에 인증코드가 저장되며, 해당 시간으로부터 10분이 지나면 발송했던 인증코드로는 인증이 불가능합니다.<br>
 [:pushpin:코드 보기](https://github.com/doitchu93/petmily/blob/f2b18926f928bed420472ee28701c57e4f84e503/petmily/src/com/kh/common/controller/AjaxAuthenticationCheckRandomCodeController.java#L35-L125)
 
 </div></details>
